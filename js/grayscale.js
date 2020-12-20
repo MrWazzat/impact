@@ -182,10 +182,14 @@ const fillLatexTemplate = (provName, region, hours, gpu, gpuPower, emissions, of
 
 const setDetails = (values) => {
   console.log({ values });
+  //LCA carbon emission of a CG per hour of usage considering it's renewed every 2 years.
+  const lcaCG = 140 / (365 * 24 * 2) 
   const { gpu, numberOfGpus, hours, provider, region, customImpact, customOffset } = values
+  
+  const lifeCycleGPUImpact = twoDigits(hours * lcaCG * numberOfGpus)
   const energy = twoDigits(state.gpus[gpu].watt * numberOfGpus * hours / 1000); // kWh
   const impact = Number.isFinite(customImpact) ? customImpact : twoDigits(state.providers[provider][region].impact / 1000); // kg/kwH
-  const co2 = twoDigits(energy * impact);
+  const co2 = twoDigits((energy * impact) + lifeCycleGPUImpact);
   const offset = Number.isFinite(customOffset) ? twoDigits(co2 * customOffset / 100) : twoDigits(co2 * state.providers[provider][region].offsetRatio / 100)
   const offsetPercents = Number.isFinite(customOffset) ? twoDigits(customOffset) : twoDigits(state.providers[provider][region].offsetRatio)
   const provName = Number.isFinite(customOffset) ? "" : state.providers[provider][region].providerName;
@@ -204,9 +208,11 @@ const setDetails = (values) => {
   $("#emitted-value").text(co2);
   $("#offset-value").text(offset);
   $("#details-counts").html(`
-  ${state.gpus[gpu].watt}W x ${hours}h x ${numberOfGpus} = <strong>${energy} kWh</strong> x ${impact}
-  kg  eq. CO<sub>2</sub>/kWh = <strong>${co2} kg eq. CO<sub>2</sub></strong>
-  `);
+  (${state.gpus[gpu].watt}W x ${hours}h x ${numberOfGpus}gpus) = (<strong>${energy} kWh</strong> x ${impact} 
+  kg  eq. CO<sub>2</sub>/kWh)
+   + (${hours}h * ${numberOfGpus}gpus * ${twoDigits(lcaCG)} kg  eq. CO<sub>2</sub>) 
+   = <strong>${co2} kg eq. CO<sub>2</sub></strong>
+   `);
   if (Number.isFinite(customOffset)) {
     $("#details-min-region").html("");
     $("#details-alternative").html("");
