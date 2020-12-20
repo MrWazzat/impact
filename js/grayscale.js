@@ -74,13 +74,14 @@ const setImports = (serveFrom, elType, attr) => {
 
 const getValues = () => {
   const gpu = $("#compute-gpu option:selected").val();
+  const numberOfGpus = $("#compute-number-gpu").val();
   const provider = $("#compute-provider option:selected").val();
   const region = provider !== "custom" ? $("#compute-region option:selected").val() : null;
   const customImpact = provider !== "custom" ? null : parseFloat($("#compute-custom-impact").val());
   const customOffset = provider !== "custom" ? null : parseFloat($("#compute-custom-offset").val());
   const hours = parseFloat($("#compute-hours").val());
   return {
-    gpu, provider, region, hours, customImpact, customOffset
+    gpu, numberOfGpus, provider, region, hours, customImpact, customOffset
   }
 }
 
@@ -181,8 +182,8 @@ const fillLatexTemplate = (provName, region, hours, gpu, gpuPower, emissions, of
 
 const setDetails = (values) => {
   console.log({ values });
-  const { gpu, hours, provider, region, customImpact, customOffset } = values
-  const energy = twoDigits(state.gpus[gpu].watt * hours / 1000); // kWh
+  const { gpu, numberOfGpus, hours, provider, region, customImpact, customOffset } = values
+  const energy = twoDigits(state.gpus[gpu].watt * numberOfGpus * hours / 1000); // kWh
   const impact = Number.isFinite(customImpact) ? customImpact : twoDigits(state.providers[provider][region].impact / 1000); // kg/kwH
   const co2 = twoDigits(energy * impact);
   const offset = Number.isFinite(customOffset) ? twoDigits(co2 * customOffset / 100) : twoDigits(co2 * state.providers[provider][region].offsetRatio / 100)
@@ -203,7 +204,7 @@ const setDetails = (values) => {
   $("#emitted-value").text(co2);
   $("#offset-value").text(offset);
   $("#details-counts").html(`
-  ${state.gpus[gpu].watt}W x ${hours}h = <strong>${energy} kWh</strong> x ${impact}
+  ${state.gpus[gpu].watt}W x ${hours}h x ${numberOfGpus} = <strong>${energy} kWh</strong> x ${impact}
   kg  eq. CO<sub>2</sub>/kWh = <strong>${co2} kg eq. CO<sub>2</sub></strong>
   `);
   if (Number.isFinite(customOffset)) {
