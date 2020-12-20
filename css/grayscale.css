@@ -309,6 +309,45 @@
   background-color: #a0a2a2 !important;
 }
 
+#flight-data, #car-data {
+  margin-top: 20px;
+  width: 280px;
+}
+
+#flight-data #flight-metric, #flight-data #car-metric, #car-data #flight-metric, #car-data #car-metric {
+  color: blue;
+  font-size: 3rem;
+  font-weight: 200;
+}
+
+#flight-data #car-metric, #car-data #car-metric {
+  color: red !important;
+}
+
+#flight-data p, #car-data p {
+  color: rgba(0, 0, 0, 0.5) !important;
+}
+
+#plane-representation, #car-representation {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+#plane-image, #car-image {
+  display: block;
+  text-align: center;
+  width: 150px;
+}
+
+#car-image {
+  width: 180px !important;
+}
+
+#plane, #car {
+  width: 150px;
+}
+
 .compute-section {
   min-height: 100vh;
   padding-top: 4rem;

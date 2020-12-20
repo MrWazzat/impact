@@ -1,3 +1,41 @@
+
+#flight-data, #car-data {
+    margin-top: 20px;
+    width: 280px;
+
+    #flight-metric, #car-metric {
+        color:blue;
+        font-size: 3rem;
+        font-weight: 200; 
+    }
+
+    #car-metric {
+        color: red !important;
+    }
+
+    p {
+        color: rgba(0,0,0,.5)!important;
+    }
+}
+
+#plane-representation, #car-representation {
+    display: flex;
+}
+
+#plane-image, #car-image {
+    display:block;
+    text-align:center;
+    width: 150px;
+}
+
+#car-image {
+    width: 180px !important;
+}
+
+#plane, #car {
+    width: 150px;
+}
+
 .compute-section {
     min-height: 100vh;
     padding-top: $sectionPaddingTop;

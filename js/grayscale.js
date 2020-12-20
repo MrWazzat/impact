@@ -191,8 +191,15 @@ const setDetails = (values) => {
   const minRegId = Number.isFinite(customOffset) ? "" : state.providers[provider].__min.region;
   const minReg = Number.isFinite(customOffset) ? "" : state.providers[provider][minRegId];
 
+  /* new details */
+  const flight = 523.4;
+  const trip = 2700;
+  const trip_distance = 8000;
+
   fillLatexTemplate(provName, region, hours, gpu, state.gpus[gpu].watt, co2, offsetPercents, impact)
 
+  $("#flight-metric").text((co2 / flight).toFixed(5));
+  $("#car-metric").text(((co2 / trip) * trip_distance).toFixed(3));
   $("#emitted-value").text(co2);
   $("#offset-value").text(offset);
   $("#details-counts").html(`
